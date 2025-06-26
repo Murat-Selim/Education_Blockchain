@@ -1,4 +1,4 @@
-// com.user.education_blockchain
+// com.user.education_blockchain.ecodation_techistanbul_blockchain
 
 module com.user.education_blockchain {
 

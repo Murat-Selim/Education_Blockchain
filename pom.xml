@@ -38,9 +38,9 @@
     </developers>
 
     <!--
-    war: java EE için kullanalım. JSP,servlet,html,css3
-    jar: Spring Boot için kullanalım
-    -->
+   war: java EE için kullanalım. JSP,servlet,html,css3
+   jar: Spring Boot için kullanalım
+   -->
     <!--apache tomcat manuel için war ekliyorum-->
     <!--<packaging>war</packaging>-->
     <packaging>jar</packaging>
@@ -204,6 +204,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <!--build-->
@@ -233,7 +239,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.user.education_blockchain/com.user.education_blockchain.HelloApplication
+                                com.user.education_blockchain/user.education_blockchain.HelloApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
