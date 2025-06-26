@@ -6,8 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
-@Builder
 public class _01_Transaction {
 
     public String from;

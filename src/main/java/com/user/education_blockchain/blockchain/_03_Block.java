@@ -1,5 +1,6 @@
 package com.user.education_blockchain.blockchain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,9 +35,6 @@ public class _03_Block {
         String input = index + timestamp + txData + previousHash;
 
         return _02_Utils.applySHA256(input);
-
-        //String hash = DigestUtils.sha256Hex(input);
-        //return hash
     }
 
     public boolean isValid() {
@@ -45,5 +43,16 @@ public class _03_Block {
 
     public List<_01_Transaction> getTransactions() {
         return transactions;
+    }
+
+    @Override
+    public String toString() {
+        return "_03_Block{" +
+                "index=" + index +
+                ", timestamp='" + timestamp + '\'' +
+                ", transactions=" + transactions +
+                ", previousHash='" + previousHash + '\'' +
+                ", hash='" + hash + '\'' +
+                '}';
     }
 }

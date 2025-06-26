@@ -1,7 +1,13 @@
 package com.user.education_blockchain.blockchain;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.security.MessageDigest;
 
+@Getter
+@Setter
 public class _02_Utils {
 
     private final static String ALGORITHM_256 = "SHA-256";
