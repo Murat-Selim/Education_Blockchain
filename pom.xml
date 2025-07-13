@@ -16,7 +16,7 @@
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -37,15 +37,8 @@
         </developer>
     </developers>
 
-    <!--
-   war: java EE için kullanalım. JSP,servlet,html,css3
-   jar: Spring Boot için kullanalım
-   -->
-    <!--apache tomcat manuel için war ekliyorum-->
-    <!--<packaging>war</packaging>-->
     <packaging>jar</packaging>
 
-    <!--properties-->
     <properties>
         <encoding>UTF-8</encoding>
         <java.version>17</java.version>
@@ -54,7 +47,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- for JavaFX - Jenkins - SonarQube ve Maven İçin Gerekli-->
+        <!-- for JavaFX - Jenkins - SonarQube ve Maven required-->
         <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -66,60 +59,37 @@
         <junit.version>5.10.2</junit.version>
     </properties>
 
-    <!-- start dependencies-->
     <dependencies>
-        <!-- SHA-256 gibi hash fonksiyonları için Apache Commons Codec -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.16.0</version>
         </dependency>
 
-        <!-- DATABASE -->
-        <!-- RDBMS H2DB-->
-        <!-- https://mvnrepository.com/artifact/h2db/h2db -->
-        <!-- H2 Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${database.h2db}</version>
         </dependency>
 
-        <!-- JDBC Driver -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.36.0.3</version>
         </dependency>
 
-        <!-- RDBMS MYSQL-->
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <!--
-            <dependency>
-                 <groupId>mysql</groupId>
-                 <artifactId>mysql-connector-java</artifactId>
-                 <version>8.0.28</version>
-             </dependency>
-         -->
-
-        <!-- OTHER SPECIAL LIBRARIES -->
-        <!-- JavaMail API -->
-        <!--<dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>-->
-
-        <!-- Apache POI: Excel -->
-        <!--excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.3</version>
         </dependency>
 
-        <!--lombok-->
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -128,7 +98,6 @@
         </dependency>
 
         <!-- JAVA FX -->
-        <!-- javafx-controls-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -204,18 +173,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
-    <!--build-->
     <build>
 
-        <!--apache tomcat manuel deployment için-->
+        <!--apache tomcat manuel deployment -->
         <defaultGoal>spring-boot:run</defaultGoal>
         <finalName>${project.artifactId}</finalName>
 
@@ -235,7 +197,6 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>

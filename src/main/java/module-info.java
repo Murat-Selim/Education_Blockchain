@@ -1,70 +1,48 @@
-// com.user.education_blockchain.ecodation_techistanbul_blockchain
-
 module com.user.education_blockchain {
 
-    // JavaFX'in temel bileşenlerini kullanmak için gerekli modüller
-    // JavaFX kontrol bileşenlerini (Button, Label, TextField vb.) kullanabilmek için gereklidir.
+    // Required to use JavaFX UI components (Button, Label, TextField, etc.)
     requires javafx.controls;
-
-    // JavaFX FXML dosyalarını (FXML UI tasarımları) yükleyebilmek için gereklidir.
+    // Required to load JavaFX FXML files (FXML UI designs)
     requires javafx.fxml;
-
-    // #######################################################################################
-    // UI geliştirme için kullanılan harici kütüphaneler
-    // ControlsFX, gelişmiş UI bileşenlerini (örn: Notifikasyonlar, Doğrulama Alanları) sağlar.
+    // ControlsFX provides advanced UI components (e.g., notifications, validation fields)
     requires org.controlsfx.controls;
-    // FormsFX, formlar için gelişmiş bileşenler sunan bir kütüphanedir.
+    // FormsFX is a library that provides advanced form components
     requires com.dlsc.formsfx;
-    // ValidatorFX, form doğrulama işlemleri için kullanılır.
+    // ValidatorFX is used for form validation
     requires net.synedra.validatorfx;
-    // İkon kütüphanesi, UI'de çeşitli ikonları kullanmaya olanak tanır.
+    // Icon library allows usage of various icons in the UI
     requires org.kordamp.ikonli.javafx;
-    // BootstrapFX, Bootstrap benzeri CSS stillerini JavaFX'e entegre eder.
+    // BootstrapFX integrates Bootstrap-like CSS styles into JavaFX
     requires org.kordamp.bootstrapfx.core;
-
-    // #######################################################################################
-    // Lombok kütüphanesi, Java'da getter, setter, constructor gibi metotları otomatik oluşturur.
-    // Lombok, derleme zamanı (compile-time) kullanıldığı için "static" olarak eklenmiştir.
+    // Lombok is used at compile-time, so it's declared as "static"
     requires static lombok;
-
-    // JDBC ile veritabanı bağlantısı kurabilmek için gerekli modül
-    // Java'daki SQL işlemlerini (Connection, Statement, ResultSet vb.) gerçekleştirebilmek için gereklidir.
+    // Required to perform SQL operations in Java (Connection, Statement, ResultSet, etc.)
     requires java.sql;
+
+    // requires commons.codec;
+
+    requires com.google.gson;
     requires org.apache.commons.codec;
 
-    // #######################################################################################
-    // Paket Erişimlerine İzin vermek
-    // `opens` ifadesi, bir paketin runtime'da (çalışma zamanında) refleksiyon (reflection) kullanılarak erişilebilir olmasını sağlar.
-    // Ana paket (Root package) açılıyor, böylece FXML dosyalarından erişilebilir.
+    // The `opens` directive allows a package to be accessed via reflection at runtime
     opens com.user.education_blockchain to javafx.fxml;
-
-
-    // Controller sınıfları FXML tarafından kullanılacağı için açılması gerekiyor.
+    // Controller classes must be open for FXML to access them
     opens com.user.education_blockchain.controller to javafx.fxml;
-
-    // DTO (Data Transfer Object) paketinin içeriği, JavaFX bileşenleri ve Lombok tarafından erişilebilir olmalıdır.
+    // DTO (Data Transfer Object) package should be accessible to JavaFX and Lombok
     opens com.user.education_blockchain.dto to javafx.base, lombok;
-
-    // DAO (Data Access Object) sınıfları, SQL bağlantısı kullandığı için açılıyor.
+    // DAO (Data Access Object) classes use SQL, so they must be opened
     opens com.user.education_blockchain.dao to java.sql;
-
-    // Veritabanı bağlantısı sağlayan sınıfların da SQL modülüne açık olması gerekiyor.
+    // Database connection classes must also be open to the SQL module
     opens com.user.education_blockchain.database to java.sql;
 
     // #######################################################################################
-    // Paket dışa aktarmak
-    // `exports` ifadesi, paketin diğer modüller tarafından erişilebilir olmasını sağlar.
 
-    // blockchain paketini dışa açarak controller gibi sınıflardan erişimi mümkün kılıyor.
-    exports com.user.education_blockchain.blockchain; // Blockchain paketini dışa aç
-
-    // Ana paketi dış dünyaya açıyoruz. Diğer modüller bu paketin içeriğini kullanabilir.
+    // Exporting the blockchain package so it can be accessed from other classes like controllers
+    exports com.user.education_blockchain.blockchain;
+    // Exporting the main package so its content can be used by other modules
     exports com.user.education_blockchain;
-
-    // DAO sınıflarını dışarıya açıyoruz. Böylece başka modüller veritabanı işlemlerini çağırabilir.
+    // Exporting DAO classes so other modules can perform database operations
     exports com.user.education_blockchain.dao;
-
-    // // Veritabanı bağlantı paketini dış dünyaya açıyoruz. Diğer modüller DB bağlantısını kullanabilir.
+    // Exporting the database connection package so it can be accessed externally
     exports com.user.education_blockchain.database;
-
 }

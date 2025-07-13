@@ -1,8 +1,8 @@
 package com.user.education_blockchain.blockchain;
 
-public class _00_ProjectInformation {
+public class ProjectInformation {
     public static void main(String[] args) {
         System.out.println("Blockchain Simulator");
-        System.out.println("Bu projede bloklar, SHA-256 hash, smart Contract ve cüzdanlar simüle edilmektedir.");
+        System.out.println("Blocks, SHA-256 hash, Smart Contract and Wallets simulation.");
     }
 }
