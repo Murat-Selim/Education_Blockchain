@@ -1,7 +1,6 @@
 package com.user.education_blockchain.blockchain;
 
 import com.user.education_blockchain.utils.SpecialColor;
-
 import java.util.*;
 
 public class MainTest_2 {
@@ -12,14 +11,16 @@ public class MainTest_2 {
 
     private static final String[] userData = new String[3];
 
+    // Track last transaction times to prevent spam
     private static final Map<String, Long> lastTransactionTime = new HashMap<>();
 
+    // Blockchain and smart contract instances
     static Blockchain blockchain = new Blockchain();
     static SmartContract smartContract = new SmartContract(blockchain);
 
     private static String[] addUser() {
         for (int i = 0; i < 3; i++) {
-            System.out.print(SpecialColor.YELLOW + "Lütfen " + (i + 1) + " kullanıcıyı yazınız: " + SpecialColor.RESET);
+            System.out.print(SpecialColor.YELLOW + "Please enter user " + (i + 1) + ": " + SpecialColor.RESET);
             String temp = scanner.nextLine();
             userData[i] = temp;
         }
@@ -31,7 +32,6 @@ public class MainTest_2 {
 
     private static void walletAdd() {
         String[] user = addUser();
-
         for (int i = 0; i < 3; i++) {
             Wallet wallet = new Wallet();
             Wallet.getBalances().put(user[i], 1000.0);
@@ -39,98 +39,105 @@ public class MainTest_2 {
         }
     }
 
+    /**
+     * Displays menu options and processes user input accordingly.
+     */
     private static void userChooise() {
         walletAdd();
+
         while (running) {
-            System.out.println("\n========= 📋 Blockchain Menü =========");
-            System.out.println("1. 💸 Transfer Yap");
-            System.out.println("2. 📄 Blockchain Yazdır");
-            System.out.println("3. 💼 Cüzdan Bakiyelerini Görüntüle");
-            System.out.println("4. ✅ Zincir Geçerliliğini Kontrol Et");
-            System.out.println("5. 🧱 Dijital İmza Ve Anahtar Yönetimi Testi");
-            System.out.println("6. ✅ İstatiksel Gösterim");
-            System.out.println("0. ❌ Çıkış");
-            System.out.print("Seçiminiz: ");
+            System.out.println("\n========= 📋 Blockchain Menu =========");
+            System.out.println("1. 💸 Make a Transfer");
+            System.out.println("2. 📄 Print Blockchain");
+            System.out.println("3. 💼 View Wallet Balances");
+            System.out.println("4. ✅ Check Chain Validity");
+            System.out.println("5. 🧱 Digital Signature Test");
+            System.out.println("6. 📊 Statistical Report");
+            System.out.println("0. ❌ Exit");
+            System.out.print("Your choice: ");
 
-            int chooise ;
-
-            for(;;){
-                System.out.println("\n" +SpecialColor.GREEN+"Seçiminizi yapınız sadece sayı giriniz"+SpecialColor.RESET);
-                if(scanner.hasNextInt()){
+            int chooise;
+            for (;;) {
+                System.out.println("\n" + SpecialColor.GREEN + "Enter a valid number choice:" + SpecialColor.RESET);
+                if (scanner.hasNextInt()) {
                     chooise = scanner.nextInt();
-                    scanner.nextLine();
+                    scanner.nextLine(); // consume newline
                     break;
-                } else{
-                    System.out.println(SpecialColor.RED+"Hatalı giriş yaptınız Lütfen sadece tamsayı(int) giriniz"+SpecialColor.RESET);
+                } else {
+                    System.out.println(SpecialColor.RED + "Invalid input. Please enter an integer." + SpecialColor.RESET);
                     scanner.nextLine();
                 }
             }
 
             switch (chooise) {
-                case 1:
+                case 1: // Money transfer
                     Arrays.asList(userData).forEach(user -> System.out.print(user + " "));
-                    // scanner.nextLine();
 
                     long now = System.currentTimeMillis();
 
                     String from;
                     do {
-                        System.out.print("\n👤 Gönderen: ");
+                        System.out.print("\n👤 Sender: ");
                         from = scanner.nextLine();
 
-                        if(lastTransactionTime.containsKey(from)){
-                            long diff = now -lastTransactionTime.get(from);
-                            if(diff<5000){
-                                System.out.println("⚠️ Çok sık işlem gönderiyorsunuz ne yapıyorsun sen !!!!, Lütfen bekleyin");
+                        // Anti-spam check: 5 seconds delay per sender
+                        if (lastTransactionTime.containsKey(from)) {
+                            long diff = now - lastTransactionTime.get(from);
+                            if (diff < 5000) {
+                                System.out.println("⚠️ You're sending too fast. Please wait a moment.");
                                 return;
                             }
                         }
-                        lastTransactionTime.put(from,now);
+                        lastTransactionTime.put(from, now);
+
                         if (!Wallet.getBalances().containsKey(from)) {
-                            System.out.println("⚠️ Geçersiz gönderen kullanıcı! Tekrar deneyin.");
+                            System.out.println("⚠️ Invalid sender! Try again.");
                         }
                     } while (!Wallet.getBalances().containsKey(from));
 
-
+                    // Receiver input and validation
                     String to;
                     do {
-                        System.out.print("👤 Alıcı: ");
+                        System.out.print("👤 Receiver: ");
                         to = scanner.nextLine();
                         if (!Wallet.getBalances().containsKey(to)) {
-                            System.out.println("⚠️ Geçersiz alıcı kullanıcı! Tekrar deneyin.");
+                            System.out.println("⚠️ Invalid receiver! Try again.");
                         }
                     } while (!Wallet.getBalances().containsKey(to));
 
+                    // Amount input and validation
                     double amount;
                     do {
-                        System.out.print("💰 Miktar: ");
+                        System.out.print("💰 Amount: ");
                         amount = scanner.nextDouble();
                         double senderBalance = Wallet.getBalances().get(from);
 
                         if (senderBalance == 0) {
-                            System.out.println("💸 Bakiyeniz 0TL. Yeni para eklemek ister misiniz ? (evet/hayır) ");
+                            System.out.println("💸 Your balance is 0. Add funds? (yes/no)");
+                            scanner.nextLine();
                             String request = scanner.nextLine().trim().toLowerCase();
-                            if (request.equals("evet")) {
-                                System.out.println("💰 Eklenek para miktarı");
+                            if (request.equals("yes")) {
+                                System.out.print("💰 Enter amount to add: ");
                                 double newAmount = scanner.nextDouble();
                                 scanner.nextLine();
                                 Wallet.addBalance(from, newAmount);
                                 senderBalance = Wallet.getBalances().get(from);
-                                System.out.println("✅ Yeni bakiye: " + senderBalance + " TL");
+                                System.out.println("✅ New balance: " + senderBalance + " TL");
                             } else {
-                                System.out.println("Cüzdana para ekleme iptal edildi");
+                                System.out.println("Cancelled fund addition.");
                             }
                         }
 
                         if (amount <= 0) {
-                            System.out.println("⚠️ Miktar olarak sıfırdan büyük olmalıdır. Tekrar giriniz.");
+                            System.out.println("⚠️ Amount must be greater than zero. Try again.");
                         } else if (amount > senderBalance) {
-                            System.out.println("⚠️ Bakiye yetersiz! En fazla " + senderBalance + " kadar gönderebilirsiniz.");
+                            System.out.println("⚠️ Insufficient balance. Max allowed: " + senderBalance);
                             amount = -1;
                         }
                     } while (amount <= 0);
                     scanner.nextLine();
 
+                    // Transaction creation, signing, and validation
                     Wallet sender = Wallet.getWalletByName(from);
                     Wallet receiver = Wallet.getWalletByName(to);
 
@@ -143,53 +150,52 @@ public class MainTest_2 {
                     signedTx.signTransaction(sender.getPrivateKey());
                     boolean valid = signedTx.isSignatureValid(sender.getPublicKey());
 
-
                     if (!valid) {
-                        System.out.println(" işlem imzası geçersiz! Transfer iptal edildi.");
+                        System.out.println("❌ Invalid transaction signature! Transfer canceled.");
                         break;
                     }
 
+                    // Record transaction
                     Wallet.incrementTransactionCount(from);
-
                     List<Transaction> txs = new ArrayList<>();
                     txs.add(signedTx);
                     Block newBlock = new Block(blockchain.getChain().size(), txs, blockchain.getLatestBlock().getHash());
                     blockchain.addBlock(newBlock);
 
-                    System.out.println("ilem baarıyla gerçekletirildi.");
-
-                    System.out.println("\n Dijital imza Detayları:");
-                    System.out.println("Gönderen Adı: " + from);
-                    System.out.println(" Alıcı Adı: " + to);
-                    System.out.println(" Miktar: " + amount);
-                    System.out.println(" Gönderen Private Key: " + sender.getPrivateKeyString());
-                    System.out.println(" Gönderen Public Key: " + sender.getPublicKeyString());
-                    System.out.println(" imza Dogrulama Sonucu: " + (valid?  "Geçerli" : "Geçersiz"));
+                    // Confirmation & signature details
+                    System.out.println("✅ Transaction completed successfully.");
+                    System.out.println("\n🔐 Digital Signature Details:");
+                    System.out.println("Sender: " + from);
+                    System.out.println("Receiver: " + to);
+                    System.out.println("Amount: " + amount);
+                    System.out.println("Sender Private Key: " + sender.getPrivateKeyString());
+                    System.out.println("Sender Public Key: " + sender.getPublicKeyString());
+                    System.out.println("Signature Valid: " + (valid ? "Yes" : "No"));
 
                     System.out.println(smartContract.executeTransfer(from, to, amount));
                     break;
 
-                case 2:
-                    System.out.println("\n=========Blockchain Yapısı========");
+                case 2: // Print blockchain
+                    System.out.println("\n========= Blockchain Structure =========");
                     System.out.println(blockchain.printBlockChain());
                     break;
 
-                case 3:
-                    System.out.println("\n=========Cüzdan Bakiyesi========");
-                    Wallet.getBalances().forEach((user, balance) -> {
-                        System.out.println(user + " ==> Bakiyesi: " + balance);
-                    });
+                case 3: // Show wallet balances
+                    System.out.println("\n========= Wallet Balances =========");
+                    Wallet.getBalances().forEach((user, balance) ->
+                            System.out.println(user + " => Balance: " + balance + " TL"));
                     break;
 
-                case 4:
-                    String result = blockchain.isChainValid() ? "✅ Evet" : "❌ Hayır";
-                    System.out.println("\nZincir Geçerli mi ? " + (result));
+                case 4: // Validate chain
+                    String result = blockchain.isChainValid() ? "✅ Yes" : "❌ No";
+                    System.out.println("\nIs the blockchain valid? " + result);
                     break;
 
-                case 5:
-                    System.out.println("===  Dijital imza ve Anahtar Yönetimi Testi ===");
+                case 5: // Digital signature test
+                    System.out.println("=== Digital Signature and Key Test ===");
                     Wallet senderWallet = new Wallet();
                     Wallet receiverWallet = new Wallet();
+
                     Transaction transaction = new Transaction(
                             senderWallet.getPublicKeyString(),
                             receiverWallet.getPublicKeyString(),
@@ -198,43 +204,42 @@ public class MainTest_2 {
                     transaction.signTransaction(senderWallet.getPrivateKey());
                     boolean isValid = transaction.isSignatureValid(senderWallet.getPublicKey());
 
-                    System.out.println("--- islem Detayları ---");
-                    System.out.println(" Gönderen Public Key: " + senderWallet.getPublicKeyString());
-                    System.out.println(" Gönderen Private Key: " + senderWallet.getPrivateKeyString());
-                    System.out.println(" Alıcı Public Key: " + receiverWallet.getPublicKeyString());
-                    System.out.println(" Transfer Miktarı: 100");
-                    System.out.println(" imza Geçerliliği: " + (isValid?  "Geçerli" : "Geçersiz"));
+                    System.out.println("--- Transaction Info ---");
+                    System.out.println("Sender Public Key: " + senderWallet.getPublicKeyString());
+                    System.out.println("Sender Private Key: " + senderWallet.getPrivateKeyString());
+                    System.out.println("Receiver Public Key: " + receiverWallet.getPublicKeyString());
+                    System.out.println("Amount: 100");
+                    System.out.println("Signature Valid: " + (isValid ? "Yes" : "No"));
                     break;
 
-                case 6:
-                    System.out.println("\n=========İstatiksel Gösterim======== ");
-                    System.out.println("Kullanıcı İşlem Sayısı");
-                    Wallet.getTransactionCounts().forEach((user, count) -> {
-                        System.out.println(user + " kullanıcısı " + count + " işlem yaptı");
-                    });
+                case 6: // Statistics
+                    System.out.println("\n========= 📊 Statistics =========");
+                    System.out.println("Transaction Count Per User:");
+                    Wallet.getTransactionCounts().forEach((user, count) ->
+                            System.out.println(user + " made " + count + " transactions."));
 
                     double totalAmount = blockchain.getChain().stream()
                             .flatMap(block -> block.getTransactions().stream())
-                            .filter(temp -> temp.getAmount() > 0)
+                            .filter(tx -> tx.getAmount() > 0)
                             .mapToDouble(Transaction::getAmount)
                             .sum();
-                    System.out.println("\nToplam Transfer Edilen Miktar: " +SpecialColor.YELLOW+ totalAmount+SpecialColor.RESET);
+                    System.out.println("\nTotal Transferred Amount: " + SpecialColor.YELLOW + totalAmount + SpecialColor.RESET + " TL");
 
-                    System.out.println("\nBlok bazlı işlem sayısı");
+                    System.out.println("\nTransactions Per Block:");
                     int i = 0;
                     for (Block block : blockchain.getChain()) {
-                        System.out.println("Block " + (i++) + ": " + block.getTransactions().size() + " işlem");
+                        System.out.println("Block " + (i++) + ": " + block.getTransactions().size() + " transactions");
                     }
                     break;
 
-                case 0:
+                case 0: // Exit
                     running = false;
-                    System.out.println("Çıkış yapılıyor");
+                    System.out.println("Exiting...");
                     System.exit(0);
                     break;
 
                 default:
-                    System.out.println("❌ Geçersiz seçim yaptınız tekrar deneyiniz ");
+                    System.out.println("❌ Invalid selection. Please try again.");
             }
         }
 
